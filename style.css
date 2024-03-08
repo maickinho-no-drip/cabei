@@ -1,19 +1,12 @@
-#start-btn
-{
-    width: 40%;
-} 
-#camera
-{
-    width:360px;
-    height: 250px;
-    border:1px solid grey;
+body{
+text-align: center;
+
+background-color:pink ;
 }
-#logo_img
-{
-    width: 150px;
-    border-radius: 100px;
-}
-#textbox
-{
-    width: 300px;
+
+#camera{
+
+border-color: blueviolet;
+
+box-shadow: 0cqmin;
 }

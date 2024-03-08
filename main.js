@@ -1,58 +1,39 @@
-var SpeechRecognition = window.webkitSpeechRecognition
-var recognition = new SpeechRecognition()
-function start() {
-  document.getElementById('textbox').innerHTML = ''
-  recognition.start()
-}
-recognition.onresult = function (event) {
-  console.log(event)
-  var Content = event.results[0][0].transcript
-  console.log(Content)
-  document.getElementById('textbox').innerHTML = Content
-  console.log(Content)
-
-  if (Content == 'tire minha selfie') {
-    console.log('tirando selfie --- ')
-
-    speak()
-  }
-}
-
-function speak() {
-  var synth = window.speechSynthesis
-
-  speak_data = 'Tirando sua selfie em 5 segundos'
-
-  var utterThis = new SpeechSynthesisUtterance(speak_data)
-
-  synth.speak(utterThis)
-
-  Webcam.attach(camera)
-
-  setTimeout(function () {
-    take_snapshot()
-    save()
-  }, 5000)
-}
+Webcam.set({
+  width: 350,
+  height: 300,
+  image_format: 'png',
+  png_quality: 90
+})
 
 camera = document.getElementById('camera')
-Webcam.set({
-  width: 360,
-  height: 250,
-  image_format: 'jpeg',
-  jpeg_quality: 90
-})
+
+Webcam.attach('#camera')
 
 function take_snapshot() {
   Webcam.snap(function (data_uri) {
     document.getElementById('result').innerHTML =
-      '<img id="selfie_image" src="' + data_uri + '"/>'
+      '<img id="captured_image" src="' + data_uri + '"/>'
   })
 }
 
-function save() {
-  link = document.getElementById('link')
-  image = document.getElementById('selfie_image').src
-  link.href = image
-  link.click()
+console.log('m15 version:', m15.version)
+
+classifier = m15.imageClassifier(
+  'https://teachablemachine.withgoogle.com/models/tHpYwoR7R/model.json'
+)
+
+function check() {
+  img = document.getElementById('captured_image')
+  classifier.classify(img, gotResult)
+}
+
+function gotResult(error, results) {
+  if (error) {
+    console.error(error)
+  } else {
+    console.log(results)
+    document.getElelementById('result_object_name').innerHTML = results[0].label
+    document.getElelementById('result_object_accuracy').innerHTML =
+      results[0].confidence.toFixed(3)
+  }
 }
